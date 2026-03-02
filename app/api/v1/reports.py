@@ -53,7 +53,7 @@ def get_analytics(
 
 @router.get("/export")
 def export_report(
-    format: str = Query("pdf", regex="^(pdf|csv)$"),
+    format: str = Query("pdf", pattern="^(pdf|csv)$"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):

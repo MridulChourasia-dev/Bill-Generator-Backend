@@ -73,7 +73,13 @@ def get_user_by_email(db: Session, email: str) -> Optional[User]:
     return db.query(User).filter(User.email == email).first()
 
 
-def get_user_by_id(db: Session, user_id: UUID) -> Optional[User]:
+def get_user_by_id(db: Session, user_id) -> Optional[User]:
+    """Lookup a user by ID. Accepts both UUID objects and UUID strings."""
+    if not isinstance(user_id, UUID):
+        try:
+            user_id = UUID(str(user_id))
+        except (ValueError, AttributeError):
+            return None
     return db.query(User).filter(User.id == user_id).first()
 
 
