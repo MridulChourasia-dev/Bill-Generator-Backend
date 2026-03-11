@@ -6,9 +6,11 @@ from app.models.user import User
 from app.schemas.user import (
     UserCreate, UserResponse, UserUpdate, Token, LoginRequest,
     ForgotPasswordRequest, ResetPasswordRequest, RefreshTokenRequest,
+    ChangePasswordRequest, DeleteAccountRequest,
 )
 from app.services.auth_service import (
-    hash_password, authenticate_user, create_access_token, create_refresh_token,
+    hash_password, verify_password, authenticate_user,
+    create_access_token, create_refresh_token,
     create_email_verification_token, create_password_reset_token,
     decode_token, get_user_by_email, get_user_by_id,
 )

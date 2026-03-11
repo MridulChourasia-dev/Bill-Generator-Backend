@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 import logging
 
 from app.config import settings
-from app.database import engine, Base
+from app.database import engine, Base, init_db
 from app.api.v1 import auth, bills, payments, reminders, reports
 
 # Configure logging
@@ -20,8 +20,8 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Startup and shutdown events."""
     logger.info("Starting up Bill Generator API...")
-    # Create all tables on startup (in production, use Alembic migrations)
-    # Base.metadata.create_all(bind=engine)
+    # Auto-create all tables (safe for development; use Alembic in production)
+    init_db()
     yield
     logger.info("Shutting down Bill Generator API...")
 

@@ -28,11 +28,11 @@ class PDFService:
     def _get_styles(self):
         styles = getSampleStyleSheet()
         styles.add(ParagraphStyle(
-            name="Title", fontSize=22, textColor=colors.HexColor("#2c3e50"),
+            name="DocTitle", fontSize=22, textColor=colors.HexColor("#2c3e50"),
             spaceAfter=6, alignment=TA_CENTER, fontName="Helvetica-Bold"
         ))
         styles.add(ParagraphStyle(
-            name="SubTitle", fontSize=12, textColor=colors.HexColor("#7f8c8d"),
+            name="DocSubTitle", fontSize=12, textColor=colors.HexColor("#7f8c8d"),
             spaceAfter=4, alignment=TA_CENTER
         ))
         styles.add(ParagraphStyle(
@@ -76,8 +76,8 @@ class PDFService:
         story = []
 
         # Header
-        story.append(Paragraph("BILL GENERATOR", styles["Title"]))
-        story.append(Paragraph("Payment Receipt", styles["SubTitle"]))
+        story.append(Paragraph("BILL GENERATOR", styles["DocTitle"]))
+        story.append(Paragraph("Payment Receipt", styles["DocSubTitle"]))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor("#2980b9")))
         story.append(Spacer(1, 0.4 * cm))
 
@@ -147,7 +147,7 @@ class PDFService:
         story.append(Spacer(1, 1 * cm))
         story.append(Paragraph(
             "Thank you for using Bill Generator! This is a system-generated receipt.",
-            styles["SubTitle"]
+            styles["DocSubTitle"]
         ))
 
         doc.build(story)
@@ -175,7 +175,7 @@ class PDFService:
         styles = self._get_styles()
         story = []
 
-        story.append(Paragraph("PAYMENT RECEIPT", styles["Title"]))
+        story.append(Paragraph("PAYMENT RECEIPT", styles["DocTitle"]))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor("#27ae60")))
         story.append(Spacer(1, 0.5 * cm))
 
@@ -199,7 +199,7 @@ class PDFService:
         ]))
         story.append(table)
         story.append(Spacer(1, 1 * cm))
-        story.append(Paragraph("✓ Payment successfully recorded.", styles["SubTitle"]))
+        story.append(Paragraph("✓ Payment successfully recorded.", styles["DocSubTitle"]))
 
         doc.build(story)
         logger.info(f"Generated payment PDF: {file_path}")
@@ -225,8 +225,8 @@ class PDFService:
         styles = self._get_styles()
         story = []
 
-        story.append(Paragraph("BILL GENERATOR", styles["Title"]))
-        story.append(Paragraph(f"Summary Report — {report_period}", styles["SubTitle"]))
+        story.append(Paragraph("BILL GENERATOR", styles["DocTitle"]))
+        story.append(Paragraph(f"Summary Report — {report_period}", styles["DocSubTitle"]))
         story.append(HRFlowable(width="100%", thickness=2, color=colors.HexColor("#8e44ad")))
         story.append(Spacer(1, 0.5 * cm))
         story.append(Paragraph(f"Prepared for: <b>{user_name}</b>", styles["Normal2"]))
