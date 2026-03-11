@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models.user import User
 from app.services.report_service import report_service
 from app.services.pdf_service import pdf_service
+from app.services.excel_service import excel_service
 from app.middleware.auth_middleware import get_current_user
 
 router = APIRouter()
@@ -53,7 +54,7 @@ def get_analytics(
 
 @router.get("/export")
 def export_report(
-    format: str = Query("pdf", regex="^(pdf|csv)$"),
+    format: str = Query("pdf", pattern="^(pdf|csv|xlsx)$"),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -75,6 +76,23 @@ def export_report(
             path=str(pdf_path),
             media_type="application/pdf",
             filename=f"report_{datetime.now().strftime('%Y%m')}.pdf",
+        )
+
+    if format == "xlsx":
+        report_data = [
+            {"Metric": "Total Bills", "Value": stats["total_bills"]},
+            {"Metric": "Paid Bills", "Value": stats["paid_bills"]},
+            {"Metric": "Overdue Bills", "Value": stats["overdue_bills"]},
+            {"Metric": "Pending Bills", "Value": stats["pending_bills"]},
+            {"Metric": "Total Amount Due", "Value": float(stats["total_amount_due"])},
+            {"Metric": "Total Amount Paid", "Value": float(stats["total_amount_paid"])},
+            {"Metric": "Outstanding Amount", "Value": float(stats["total_amount_due"] - stats["total_amount_paid"])},
+        ]
+        xlsx_path = excel_service.generate_bill_export(report_data, filename_prefix="summary_report")
+        return FileResponse(
+            path=str(xlsx_path),
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            filename=f"report_{datetime.now().strftime('%Y%m')}.xlsx",
         )
 
     # CSV export
